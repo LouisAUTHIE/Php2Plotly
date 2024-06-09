@@ -30,7 +30,7 @@ class ScatterPlot{
         $this->traces[] = ["name"=>$traceName, "string"=>$strTrace];
     }
 
-    public function plot():string{
+    public function render():string{
         foreach($this->data as $d){
             $this->generateTrace($d['x'], $d['y'], $d['mode']);
         }
