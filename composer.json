@@ -1,0 +1,17 @@
+{
+    "name": "louisauthie/php2plotly",
+    "description": "PlotLy script generation in PHP",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Php2plotly\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Louis AUTHIE",
+            "email": "65625876+LouisAUTHIE@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
