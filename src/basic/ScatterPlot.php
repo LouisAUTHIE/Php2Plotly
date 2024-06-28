@@ -17,13 +17,14 @@ class ScatterPlot{
         return $this;
     }
 
-    private function generateTrace(array $x, array $y, string $mode):void{
+    private function generateTrace(array $x, array $y, string $mode, $name):void{
         $traceName = 'trace'.uniqid();
         $strTrace = "
         var ".$traceName." = {"
         ."\n x: [".implode(',', $x)."],"
         ."\n y: [".implode(',', $y)."],"
         ."\n mode: '$mode',"
+        ."\n name: '$name',"
         ."\n type: '".$this::TYPE."'"
         ."\n};";
 
@@ -32,7 +33,7 @@ class ScatterPlot{
 
     public function render():string{
         foreach($this->data as $d){
-            $this->generateTrace($d['x'], $d['y'], $d['mode']);
+            $this->generateTrace($d['x'], $d['y'], $d['mode'], $d['name']);
         }
         $this->plot .= implode('', array_map(fn($t) => $t['string'], $this->traces));
         $this->plot .= "var data = [".implode(',', array_map(fn($t) => $t['name'], $this->traces))."];";
