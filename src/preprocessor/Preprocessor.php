@@ -17,7 +17,7 @@ class Preprocessor{
         return ($n * $sumXY - $sumX * $sumY) / sqrt(($n * $sumX2 - $sumX * $sumX) * ($n * $sumY2 - $sumY * $sumY));
     }
 
-    public static function buildArrayForPearsonCollerationMatrix(array $data):array{
+    public static function buildArrayForPearsonCorrelationMatrix(array $data):array{
         $n = count($data);
         $matrix = [];
         for($i = 0; $i < $n; $i++){
