@@ -34,20 +34,32 @@ class PieChart{
         $this->layoutInfo = ["name"=>$layoutName, "string"=>$strLayout];
     }
 
-    private function generateTrace(array $x, array $y):void{
+    private function generateTrace(array $x, array $y, ?string $textinfo = null, ?string $insidetextorientation = null):void{
         $traceName = 'trace'.uniqid();
         $strTrace = "
         var ".$traceName." = [{"
         ."\n labels: ['".implode('\',\'', $y)."'],"
         ."\n values: [".implode(',', $x)."],"
-        ."\n type: '".$this::TYPE."'"
-        ."\n}];";
+        ."\n type: '".$this::TYPE."'";
+        
+        if ($textinfo !== null) {
+            $strTrace .= ",\n textinfo: '".$textinfo."'";
+        }
+        
+        if ($insidetextorientation !== null) {
+            $strTrace .= ",\n insidetextorientation: '".$insidetextorientation."'";
+        }
+        
+        $strTrace .= "\n}];";
 
         $this->traces = ["name"=>$traceName, "string"=>$strTrace];
     }
 
     public function render():string{
-        $this->generateTrace($this->data['values'], $this->data['labels']);
+        $textinfo = $this->data['textinfo'] ?? null;
+        $insidetextorientation = $this->data['insidetextorientation'] ?? null;
+        
+        $this->generateTrace($this->data['values'], $this->data['labels'], $textinfo, $insidetextorientation);
         $this->generateLayout($this->layout);
         $this->plot .= $this->traces['string'];
         $this->plot .= $this->layoutInfo['string'];
