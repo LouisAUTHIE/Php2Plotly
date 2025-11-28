@@ -59,7 +59,7 @@ use Php2plotly\scientific\Heatmap;
 
     <div id="pie" style="width:600px;height:400px;"></div>
     <?php
-        $pie = new PieChart('pie', ['values' => [10, 15, 13, 17], 'labels' => ["Cat1", "Cat2", "Cat3", "Cat4"]], ['height' => 400, 'width' => 600]);
+        $pie = new PieChart('pie', ['values' => [10, 15, 13, 17], 'labels' => ["Cat1", "Cat2", "Cat3", "Cat4"],'textinfo'=>'label+percent','insidetextorientation'=>'radial'], ['height' => 400, 'width' => 600]);
         echo '<script>'.$pie->render().'</script>';
     ?>
 
