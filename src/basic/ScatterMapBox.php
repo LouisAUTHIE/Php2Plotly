@@ -17,14 +17,19 @@ class ScatterMapBox
         return $this;
     }
 
-    private function generateData(array $lon, array $lat, array $text, array $marker):void{
+    private function generateData(array $lon, array $lat, array $text, array $marker, ?string $textposition = null):void{
         $dataName = 'data'.uniqid();
         $strData = "
         var ".$dataName." = {"
         ."\n lon: [".implode(',', $lon)."],"
         ."\n lat: [".implode(',', $lat)."],"
-        ."\n text: ['".implode('\',\'', $text)."'],"
-        ."\n marker: { color: '".$marker['color']."', size: ".$marker['size']." },"
+        ."\n text: ['".implode('\',\'', $text)."'],";
+        
+        if ($textposition !== null) {
+            $strData .= "\n textposition: '".$textposition."',";
+        }
+        
+        $strData .= "\n marker: { color: '".$marker['color']."', size: ".$marker['size']." },"
         ."\n type: '".$this::TYPE."'"
         ."\n};";
 
@@ -32,8 +37,10 @@ class ScatterMapBox
     }
 
     public function render():string{
-        foreach($this->data as $d)
-            $this->generateData($d['lon'], $d['lat'], $d['text'], $d['marker']);
+        foreach($this->data as $d) {
+            $textposition = $d['textposition'] ?? null;
+            $this->generateData($d['lon'], $d['lat'], $d['text'], $d['marker'], $textposition);
+        }
         $this->plot .= implode('', array_map(fn($d) => $d['string'], $this->dataArray));
         $this->plot .= "var data = [".implode(',', array_map(fn($d) => $d['name'], $this->dataArray))."];";
 

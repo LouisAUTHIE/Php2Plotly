@@ -17,7 +17,7 @@ class Heatmap{
         return $this;
     }
 
-    private function generateTrace(array $x, array $y, array $z):void{
+    private function generateTrace(array $x, array $y, array $z, ?array $text = null):void{
         $traceName = 'trace'.uniqid();
         $zStr = "";
         foreach($z as $zArr){
@@ -29,9 +29,18 @@ class Heatmap{
         var ".$traceName." = [{"
         ."\n z: [".$zStr."],"
         ."\n x: ['".implode('\',\'', $x)."'],"
-        ."\n y: ['".implode('\',\'', $y)."'],"
+        ."\n y: ['".implode('\',\'', $y)."'],";
         
-        ."\n type: '".$this::TYPE."',"
+        if ($text !== null) {
+            $textStr = "";
+            foreach($text as $textArr){
+                if($textStr != "") $textStr .= ", ";
+                $textStr .= "['".implode('\',\'', $textArr)."']";
+            }
+            $strTrace .= "\n text: [".$textStr."],";
+        }
+        
+        $strTrace .= "\n type: '".$this::TYPE."',"
         ."\n hoverongaps: false"
         ."\n}];";
 
@@ -39,7 +48,8 @@ class Heatmap{
     }
 
     public function render():string{
-        $this->generateTrace($this->data['x'], $this->data['y'], $this->data['z']);
+        $text = $this->data['text'] ?? null;
+        $this->generateTrace($this->data['x'], $this->data['y'], $this->data['z'], $text);
         $this->plot .= $this->traces['string'];
         $this->plot .= "Plotly.newPlot('".$this->divId."', ".$this->traces['name'].");";
         return $this->plot;

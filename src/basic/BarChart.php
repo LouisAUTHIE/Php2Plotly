@@ -17,20 +17,30 @@ class BarChart{
         return $this;
     }
 
-    private function generateTrace(array $x, array $y):void{
+    private function generateTrace(array $x, array $y, ?array $text = null, ?string $textposition = null):void{
         $traceName = 'trace'.uniqid();
         $strTrace = "
         var ".$traceName." = [{"
         ."\n x: ['".implode('\',\'', $x)."'],"
-        ."\n y: [".implode(',', $y)."],"
-        ."\n type: '".$this::TYPE."'"
+        ."\n y: [".implode(',', $y)."],";
+        
+        if ($text !== null) {
+            $strTrace .= "\n text: ['".implode('\',\'', $text)."'],";
+        }
+        if ($textposition !== null) {
+            $strTrace .= "\n textposition: '".$textposition."',";
+        }
+        
+        $strTrace .= "\n type: '".$this::TYPE."'"
         ."\n}];";
 
         $this->traces = ["name"=>$traceName, "string"=>$strTrace];
     }
 
     public function render():string{
-        $this->generateTrace($this->data['x'], $this->data['y']);
+        $text = $this->data['text'] ?? null;
+        $textposition = $this->data['textposition'] ?? null;
+        $this->generateTrace($this->data['x'], $this->data['y'], $text, $textposition);
         $this->plot .= $this->traces['string'];
         $this->plot .= "Plotly.newPlot('".$this->divId."', ".$this->traces['name'].");";
         return $this->plot;

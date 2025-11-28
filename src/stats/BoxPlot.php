@@ -17,12 +17,17 @@ class BoxPlot{
         return $this;
     }
 
-    private function generateTrace(array $y):void{
+    private function generateTrace(array $y, ?array $text = null):void{
         $traceName = 'trace'.uniqid();
         $strTrace = "
         var ".$traceName." = {"
-        ."\n y: [".implode(',', $y)."],"
-        ."\n type: '".$this::TYPE."'"
+        ."\n y: [".implode(',', $y)."],";
+        
+        if ($text !== null) {
+            $strTrace .= "\n text: ['".implode('\',\'', $text)."'],";
+        }
+        
+        $strTrace .= "\n type: '".$this::TYPE."'"
         ."\n};";
 
         $this->traces[] = ["name"=>$traceName, "string"=>$strTrace];
@@ -30,7 +35,8 @@ class BoxPlot{
 
     public function render():string{
         foreach($this->data as $d){
-            $this->generateTrace($d['y']);
+            $text = $d['text'] ?? null;
+            $this->generateTrace($d['y'], $text);
         }
         $this->plot .= implode('', array_map(fn($t) => $t['string'], $this->traces));
         $this->plot .= "var data = [".implode(',', array_map(fn($t) => $t['name'], $this->traces))."];";
